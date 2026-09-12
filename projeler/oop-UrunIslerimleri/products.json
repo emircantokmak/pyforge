@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "title": "Elma",
+        "price": 19.25,
+        "stock": 5
+    },
+    {
+        "id": 2,
+        "title": "Armut",
+        "price": 17.99,
+        "stock": 35
+    },
+    {
+        "id": 3,
+        "title": "Ayva",
+        "price": 14.15,
+        "stock": 27
+    },
+    {
+        "id": 4,
+        "title": "Kabak",
+        "price": 8,
+        "stock": 19
+    },
+    {
+        "id": 5,
+        "title": "Karpuz",
+        "price": 25,
+        "stock": 9
+    },
+    {
+        "id": 6,
+        "title": "Zeldeçal",
+        "price": 10,
+        "stock": 8
+    },
+    {
+        "id": 7,
+        "title": "Kavun",
+        "price": 15,
+        "stock": 50
+    },
+    {
+        "id": 8,
+        "title": "Avakado",
+        "price": 23.25,
+        "stock": 6
+    },
+    {
+        "id": 9,
+        "title": "Erik",
+        "price": 12,
+        "stock": 4
+    },
+    {
+        "id": 10,
+        "title": "Armut",
+        "price": 9.25,
+        "stock": 1
+    }
+]

@@ -1,0 +1,207 @@
+{
+    "menuler": {
+        "Standart Menü": [
+            {
+                "tip": "Yiyecek",
+                "isim": "Klasik Burger",
+                "fiyat": 220.0,
+                "kategori": "Burger",
+                "porsiyon": "Tek",
+                "stok": 30
+            },
+            {
+                "tip": "Yiyecek",
+                "isim": "Cheeseburger",
+                "fiyat": 240.0,
+                "kategori": "Burger",
+                "porsiyon": "Tek",
+                "stok": 25
+            },
+            {
+                "tip": "Yiyecek",
+                "isim": "Tavuklu Burger",
+                "fiyat": 190.0,
+                "kategori": "Burger",
+                "porsiyon": "Tek",
+                "stok": 20
+            },
+            {
+                "tip": "Yiyecek",
+                "isim": "Margarita Pizza",
+                "fiyat": 260.0,
+                "kategori": "Pizza",
+                "porsiyon": "Orta Boy",
+                "stok": 15
+            },
+            {
+                "tip": "Yiyecek",
+                "isim": "Karışık Pizza",
+                "fiyat": 310.0,
+                "kategori": "Pizza",
+                "porsiyon": "Büyük Boy",
+                "stok": 12
+            },
+            {
+                "tip": "Yiyecek",
+                "isim": "Adana Kebap",
+                "fiyat": 340.0,
+                "kategori": "Kebap",
+                "porsiyon": "1 Porsiyon",
+                "stok": 18
+            },
+            {
+                "tip": "Yiyecek",
+                "isim": "Urfa Kebap",
+                "fiyat": 340.0,
+                "kategori": "Kebap",
+                "porsiyon": "1 Porsiyon",
+                "stok": 15
+            },
+            {
+                "tip": "Yiyecek",
+                "isim": "İskender Kebap",
+                "fiyat": 380.0,
+                "kategori": "Kebap",
+                "porsiyon": "1.5 Porsiyon",
+                "stok": 10
+            },
+            {
+                "tip": "Yiyecek",
+                "isim": "Tavuk Şiş",
+                "fiyat": 250.0,
+                "kategori": "Izgara",
+                "porsiyon": "1 Porsiyon",
+                "stok": 22
+            },
+            {
+                "tip": "Yiyecek",
+                "isim": "Mercimek Çorbası",
+                "fiyat": 90.0,
+                "kategori": "Çorba",
+                "porsiyon": "Kase",
+                "stok": 40
+            },
+            {
+                "tip": "Yiyecek",
+                "isim": "Ezogelin Çorbası",
+                "fiyat": 90.0,
+                "kategori": "Çorba",
+                "porsiyon": "Kase",
+                "stok": 35
+            },
+            {
+                "tip": "Yiyecek",
+                "isim": "Fettuccine Alfredo",
+                "fiyat": 270.0,
+                "kategori": "Makarna",
+                "porsiyon": "1 Porsiyon",
+                "stok": 14
+            },
+            {
+                "tip": "Yiyecek",
+                "isim": "Mantı",
+                "fiyat": 230.0,
+                "kategori": "Geleneksel",
+                "porsiyon": "Bol Soslu",
+                "stok": 20
+            },
+            {
+                "tip": "Yiyecek",
+                "isim": "Fıstıklı Baklava",
+                "fiyat": 150.0,
+                "kategori": "Tatlı",
+                "porsiyon": "3 Dilim",
+                "stok": 30
+            },
+            {
+                "tip": "Yiyecek",
+                "isim": "Sütlaç",
+                "fiyat": 110.0,
+                "kategori": "Tatlı",
+                "porsiyon": "Çömlek",
+                "stok": 16
+            },
+            {
+                "tip": "Icecek",
+                "isim": "Koka Kola",
+                "fiyat": 45.0,
+                "kategori": "Soğuk İçecek",
+                "boyut": "330ml Kutu",
+                "stok": 100
+            },
+            {
+                "tip": "Icecek",
+                "isim": "Kola Zero",
+                "fiyat": 45.0,
+                "kategori": "Soğuk İçecek",
+                "boyut": "330ml Kutu",
+                "stok": 80
+            },
+            {
+                "tip": "Icecek",
+                "isim": "Fanta",
+                "fiyat": 45.0,
+                "kategori": "Soğuk İçecek",
+                "boyut": "330ml Kutu",
+                "stok": 60
+            },
+            {
+                "tip": "Icecek",
+                "isim": "Sprite",
+                "fiyat": 45.0,
+                "kategori": "Soğuk İçecek",
+                "boyut": "330ml Kutu",
+                "stok": 50
+            },
+            {
+                "tip": "Icecek",
+                "isim": "Yayık Ayranı",
+                "fiyat": 30.0,
+                "kategori": "Geleneksel İçecek",
+                "boyut": "300ml Bardak",
+                "stok": 120
+            },
+            {
+                "tip": "Icecek",
+                "isim": "Şalgam Suyu",
+                "fiyat": 35.0,
+                "kategori": "Geleneksel İçecek",
+                "boyut": "330ml Acılı",
+                "stok": 70
+            },
+            {
+                "tip": "Icecek",
+                "isim": "Ev Yapımı Limonata",
+                "fiyat": 55.0,
+                "kategori": "Soğuk İçecek",
+                "boyut": "400ml Cam Bardak",
+                "stok": 45
+            },
+            {
+                "tip": "Icecek",
+                "isim": "Türk Çayı",
+                "fiyat": 20.0,
+                "kategori": "Sıcak İçecek",
+                "boyut": "İnce Belli Bardak",
+                "stok": 200
+            },
+            {
+                "tip": "Icecek",
+                "isim": "Türk Kahvesi",
+                "fiyat": 60.0,
+                "kategori": "Sıcak İçecek",
+                "boyut": "Fincan",
+                "stok": 90
+            },
+            {
+                "tip": "Icecek",
+                "isim": "Maden Suyu",
+                "fiyat": 25.0,
+                "kategori": "Soğuk İçecek",
+                "boyut": "200ml Cam Şişe",
+                "stok": 150
+            }
+        ]
+    },
+    "aktif_siparisler": []
+}
