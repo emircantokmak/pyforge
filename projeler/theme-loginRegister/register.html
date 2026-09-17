@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kayıt Ol</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="page">
+        <div class="auth-box register-box">
+            <div class="form-area">
+                <div class="brand">
+                    <img src="assets/img/logo.svg" alt="Logo">
+                    <span>MyPanel</span>
+                </div>
+
+                <h1>Kayıt Ol</h1>
+                <p class="small-text">Yeni hesabınızı birkaç adımda oluşturun.</p>
+
+                <form id="registerForm">
+                    <div class="input-group">
+                        <label for="registerName">Ad Soyad</label>
+                        <input type="text" id="registerName" placeholder="Adınızı ve soyadınızı yazın">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="registerEmail">E-posta</label>
+                        <input type="email" id="registerEmail" placeholder="ornek@mail.com">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="registerPassword">Şifre</label>
+                        <div class="password-box">
+                            <input type="password" id="registerPassword" placeholder="Bir şifre oluşturun">
+                            <button type="button" class="show-password" data-target="registerPassword">Göster</button>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="registerPasswordAgain">Şifre Tekrar</label>
+                        <div class="password-box">
+                            <input type="password" id="registerPasswordAgain" placeholder="Şifrenizi tekrar yazın">
+                            <button type="button" class="show-password" data-target="registerPasswordAgain">Göster</button>
+                        </div>
+                    </div>
+
+                    <label class="terms">
+                        <input type="checkbox" id="terms">
+                        <span>Kullanım şartlarını ve gizlilik politikasını kabul ediyorum.</span>
+                    </label>
+
+                    <button class="main-button" type="submit">Kayıt Ol</button>
+                    <div class="message" id="registerMessage"></div>
+                </form>
+
+                <p class="bottom-text">
+                    Zaten hesabınız var mı?
+                    <a href="login.html">Giriş yapın</a>
+                </p>
+            </div>
+
+            <div class="side-area register-side">
+                <div class="side-content">
+                    <span class="side-label">YENİ HESAP</span>
+                    <h2>Aramıza<br>katılın.</h2>
+                    <p>Hesabınızı oluşturun ve paneldeki özellikleri kullanmaya başlayın.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
