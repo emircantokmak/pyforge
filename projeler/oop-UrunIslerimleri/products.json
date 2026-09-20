@@ -1,15 +1,9 @@
 [
     {
-        "id": 1,
-        "title": "Elma",
-        "price": 19.25,
-        "stock": 5
-    },
-    {
         "id": 2,
         "title": "Armut",
         "price": 17.99,
-        "stock": 35
+        "stock": 1
     },
     {
         "id": 3,
