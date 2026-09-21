@@ -1,0 +1,115 @@
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+:root{
+    --background-color:#3F6CE8;
+    --login-container-background-color:#f4f4f4;
+    --login-icon-color:#CED7E0;
+    --login-hr-color:#CED7E0;
+    --login-text-color:#CED7E0;
+    --login-rememberMe-checkBox-color:#454545;
+    --login-rememberMe-text-color:#454545;
+    --login-forgotPassword-text-color:#0E67C9;
+    --login-button-background-color:#1359AB;
+    --login-button-text-color:#fff;
+    --login-singUp-description-text-color:#454545;
+    --login-signUp-link-color:#1359AB;
+    --login-headText-color:#000000;
+    --loginHeadText-hr-border-backgroundColor:#0D54BD;
+    --login-email-text-color:#454545;
+
+
+}
+body {
+    height: 100vh;
+    background-color: var(--background-color);
+    overflow: hidden;
+    width: 100vw;
+}
+.container {
+    background-color: var(--login-container-background-color);
+    max-width: 500px;
+    width: 90%;
+    border-radius: 20px;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 35px;
+    margin: 100px auto 0;
+}
+.search {
+    display: flex;
+    align-items: left;
+    justify-content: center;
+    width: 100%;
+}
+.content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 15px;
+}
+.loginHeadText p{
+    color: var(--login-headText-color);
+    outline: none;
+    flex: 2;
+    font-size: 18px;
+    cursor: pointer;
+}
+.loginHeadText hr{
+    flex:3;
+    border-radius: 20%;
+    width:22px;
+    height:8px;
+    background-color:var( --loginHeadText-hr-border-backgroundColor);
+}
+.emailTextBox{
+    color:var(--login-email-text-color);
+    border:None;    
+    background-color:  var(--login-container-background-color);    
+    font-size:12px;
+}
+.emailHr{
+    width:150px;
+    height: 2px;
+    background-color:var(--login-container-background-color) ;
+}
+.passwordTextBox{    
+    font-size:12px;    
+    border:None;
+    color:var(--login-email-text-color);
+    background-color:  var(--login-container-background-color);
+}
+.rememberMeLogin{
+    font-size:9px;
+    font-color:var(--login-rememberMe-text-color);
+    background-color:  var(--login-container-background-color);
+}
+.checktBoxLogin{
+    width:10px;
+    height: 10px;
+    border-color:var(--login-email-text-color);
+    background-color:  var(--login-container-background-color);
+}
+.linkForgotPassword{
+    font-size:9px;
+}
+.submitLoginNowLogin{
+    width:150px;
+    height: 25px;
+    color:var(--login-button-text-color);
+    background-color:var(--login-button-background-color);
+    border-radius:10px;
+}
+.textLogin{
+    font-size:9px;
+    float:left;
+    color:var(--login-singUp-description-text-color);
+}
+.linkRegisterLogin{
+    font-size:9px;
+    float:right;
+    color:var(--login-singUp-description-text-color);
+}

@@ -1,0 +1,37 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{% static 'api/assets/css/style.css' %}">
+    <title>Register</title>
+</head>
+<body>
+    <main>
+        <section class="loginRegisterApp">
+            <div class="container">
+                <div class="loginHeadText">
+                    <p>Register</p>
+                    <hr>
+                </div>
+                <div class="content">
+                    <form id="registerForm">
+                        <input type="text" id="username" placeholder="Enter Your Username" class="emailTextBox" required><br>
+                        <br>
+                        <input type="email" id="registerEmail" placeholder="Enter Your E-Mail Adress" class="emailTextBox" required><br>
+                        <br>
+                        <input type="password" id="registerPassword" placeholder="Enter Your Password" class="passwordTextBox" required><br>
+                        <br><br>
+                        <button type="submit" class="submitLoginNowLogin">Register Now</button><br><br>
+                        <p class="textLogin">Already have an account?</p>
+                        <a href="{% url 'login-page' %}" class="linkRegisterLogin">Login Now</a>
+                        <p id="registerMessage" class="formMessage"></p>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="{% static 'api/assets/js/script.js' %}"></script>
+</body>
+</html>
