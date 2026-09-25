@@ -1,6 +1,9 @@
 """    
 #
 # - Fonksiyonlar
+# - İleri Düzey Fonksiyonlar
+#   + Lambda Fonksiyonlar
+#   + Recursive Fonksiyonlar
 #
 
 """
@@ -35,5 +38,25 @@ print('fonksiyon dışındaki x: ', x)
 
 global isim_degiskeni
 
+# - Lambda Fonksiyonları
 
+harflerimiz = "abcçdefgğhıijklmnoöprsştuüvyz"
+cevrim = {i: harfler.index(i) for i in harflerimiz}
+isimlerimiz = ["ahmet", "ışık", "ismail", "çiğdem",
+"can", "şule", "iskender"]
+print(sorted(isimlerimiz, key=lambda x: cevrim.get(x[0])))
+
+# - Özyinelemeli (Recursive) Fonksiyonlar
+
+n = 0
+def azalt(s):
+    global n
+    mesaj = '{} harfinin {}. çalışmadaki konumu: {}'
+    if len(s) < 1:
+        return s
+    else:
+        n += 1
+        print(mesaj.format('a', n, s.index('a')))
+        return azalt(s[1:])
+azalt('deneme')
 
