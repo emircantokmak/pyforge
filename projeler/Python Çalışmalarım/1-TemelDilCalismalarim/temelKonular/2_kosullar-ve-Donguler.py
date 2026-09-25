@@ -58,7 +58,7 @@ else:
         print("Bir sayıyı 0'a bölemezsiniz!")
         
 try:
-    dosya = open("dosyaadi.txt", "r")
+    dosya = open("files/dosyaadi.txt", "r")
 except IOError:
     print("bir hata oluştu!")
 finally:
