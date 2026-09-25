@@ -32,3 +32,50 @@ for i in range(1,5):
 meyveler=["Elma","Armut","Muz","Kivi"]
 for meyve in meyveler:
     print(meyve,end="\n")
+
+# - Hata Yakalama
+
+try:
+    bölünen = int(input("bölünecek sayı: "))
+    bölen = int(input("bölen sayı: "))
+except ValueError:
+    print("Lütfen sadece sayı girin!")
+else:
+    try:
+        print(bölünen/bölen)
+    except ZeroDivisionError:
+        print("Bir sayıyı 0'a bölemezsiniz!")
+
+try:
+    bölünen = int(input("bölünecek sayı: "))
+    bölen = int(input("bölen sayı: "))
+except ValueError:
+        print("Lütfen sadece sayı girin!")
+else:
+    try:
+        print(bölünen/bölen)
+    except ZeroDivisionError:
+        print("Bir sayıyı 0'a bölemezsiniz!")
+        
+try:
+    dosya = open("dosyaadi.txt", "r")
+except IOError:
+    print("bir hata oluştu!")
+finally:
+    dosya.close()
+
+bölünen1 = int(input("bölünecek sayı: "))
+if bölünen1 == 23:
+    raise Exception("Bu programda 23 sayısını görmek istemiyorum!")
+bölen = int(input("bölen sayı: "))
+print(bölünen1/bölen)
+
+tr_karakter = "şçğüöıİ"
+parola = input("Parolanız: ")
+for i in parola:
+    if i in tr_karakter:
+        raise TypeError("Parolada Türkçe karakter kullanılamaz!")
+    else:
+        pass
+print("Parola kabul edildi!")
+    
