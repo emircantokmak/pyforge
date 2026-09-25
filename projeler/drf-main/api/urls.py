@@ -11,12 +11,13 @@ from .views import (
     ProductDetailView,
     UserProductView,
     UserProductDetailView,
+    FavoriteView,
 )
 
 
 urlpatterns = [
 
-    # PAGES
+  
 
     path(
         "login/",
@@ -30,7 +31,34 @@ urlpatterns = [
         name="register-page"
     ),
 
-    # USER
+
+
+    path(
+        "api/login/",
+        LoginView.as_view(),
+        name="login-api"
+    ),
+
+    path(
+        "api/register/",
+        RegisterView.as_view(),
+        name="register-api"
+    ),
+
+
+    path(
+        "login/",
+        login_page,
+        name="login-page"
+    ),
+
+    path(
+        "register/",
+        register_page,
+        name="register-page"
+    ),
+
+  
 
     path(
         "user/register/",
@@ -50,7 +78,6 @@ urlpatterns = [
         name="profile"
     ),
 
-    # CATEGORIES
 
     path(
         "categories/",
@@ -58,7 +85,7 @@ urlpatterns = [
         name="categories"
     ),
 
-    # PRODUCTS
+    
 
     path(
         "products/",
@@ -72,7 +99,6 @@ urlpatterns = [
         name="product-detail"
     ),
 
-    # USER PRODUCTS
 
     path(
         "user/products/",
@@ -85,4 +111,18 @@ urlpatterns = [
         UserProductDetailView.as_view(),
         name="user-product-detail"
     ),
+
+    path(
+        "favorites/",
+        FavoriteView.as_view(),
+        name="favorite-list"
+    ),
+
+    path(
+    "favorites/<int:favorite_id>/",
+    FavoriteView.as_view(),
+    name="favorite-detail"
+)
+
+
 ]
