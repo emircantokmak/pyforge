@@ -90,3 +90,39 @@ class Favorite(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.product.title}"
+    
+class Cart(models.Model):
+    users=models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        related_name="cart"        
+    )
+    created_at=models.DateTimeField(auto_now_add=True)
+    updated_at=models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return f"{self.user.username} - Card"
+    
+class CartItem(models.Model):
+    card=models.ForeignKey(
+        Cart,
+        on_delete=models.CASCADE,
+        related_name="items"
+    )
+    product=models.ForeignKey(
+        Product,
+        on_delete=models.CASCADE,
+        related_name="card_items"
+    )
+    quantity=models.PositiveIntegerField(default=1)
+    created_at=models.DateTimeField(auto_now_add=True)
+    updated_at=models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        constraints=[models.UniqueConstraint(
+            fields=["card","product"],
+            name="unique_card_product"
+        ) ]
+    def __str__(self):
+        return f"{self.card.user.username} - {self.product.title} x {self.quantity}"
+    

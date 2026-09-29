@@ -10,7 +10,7 @@ from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .serializers import UserSerializer, RegisterSerializer
-from .models import Category, Product, ProductImage,Favorite
+from .models import Category, Product, ProductImage,Favorite,Cart,CartItem
 from .serializers import CategorySerializer, ProductSerializer, ProductImageSerializer,FavoriteSerializer
 from .filters import ProductFilter
 from rest_framework.pagination import PageNumberPagination
@@ -794,3 +794,45 @@ class FavoriteView(APIView):
             },
             status=status.HTTP_200_OK
         )
+class CartView(APIView):
+    permission_classes=[IsAuthenticated]
+    
+    def get(self,request):
+        cart,created=Cart.objects.get_or_create(user=request.user)
+        serializer=CartSerializer(cart)
+        return Response(
+            {
+                "success":True,
+                "data":serializer.data
+            },status=status.HTTP_200_OK
+        )
+    def post(self,request):
+        product_id=request.data.get("product_id")
+        quantity=request.data.get("quantity",1)
+        if not product_id:
+            return Response(
+                {
+                    "message":"Product Id Required"
+                },status=status.HTTP_400_BAD_REQUEST
+            )
+        try:
+            quantity=int(quantity)
+        except (TypeError,ValueError):
+            return Response({
+                "message":"Quantity not correct."
+            },status=status.HTTP_400_BAD_REQUEST
+            )
+        if quantity <= 0:
+            return Response(
+                {
+                    "message":"Quantity not positive integer"
+                },status=status.HTTP_400_BAD_REQUEST
+            )
+        try:
+            product=Product.objects.get(id=product_id,
+                                        is_active=True)
+        except Product.DoesNotExist:
+            return Response({
+                "message":"Not Product Active"
+            },status=status.HTTP_400_BAD_REQUEST
+            )
