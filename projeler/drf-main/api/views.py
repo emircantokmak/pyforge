@@ -11,7 +11,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from .serializers import UserSerializer, RegisterSerializer
 from .models import Category, Product, ProductImage,Favorite,Cart,CartItem
-from .serializers import CategorySerializer, ProductSerializer, ProductImageSerializer,FavoriteSerializer
+from .serializers import CategorySerializer, ProductSerializer,CartItemSerializer, ProductImageSerializer,FavoriteSerializer,CartSerializer
 from .filters import ProductFilter
 from rest_framework.pagination import PageNumberPagination
 
@@ -420,379 +420,72 @@ class UserProductDetailView(APIView):
         return Response(
             status=status.HTTP_204_NO_CONTENT
         )
-
-class FavoriteView(APIView):
-
+class FavoriteListView(APIView):
     permission_classes = [IsAuthenticated]
 
-    # GET
-    def get(self, request, favorite_id=None):
-
-        # Get all favorites
-        if favorite_id is None:
-
-            favorites = Favorite.objects.filter(
-                user=request.user
-            ).select_related(
-                "product",
-                "product__category"
-            ).prefetch_related(
-                "product__images"
-            )
-
-            serializer = FavoriteSerializer(
-                favorites,
-                many=True
-            )
-
-            return Response(
-                {
-                    "success": True,
-                    "message": "Favorites retrieved successfully.",
-                    "count": favorites.count(),
-                    "data": serializer.data
-                },
-                status=status.HTTP_200_OK
-            )
-
-        # Get one favorite
-        try:
-
-            favorite = Favorite.objects.select_related(
-                "product",
-                "product__category"
-            ).prefetch_related(
-                "product__images"
-            ).get(
-                id=favorite_id,
-                user=request.user
-            )
-
-        except Favorite.DoesNotExist:
-
-            return Response(
-                {
-                    "success": False,
-                    "message": "Favorite not found.",
-                    "data": None
-                },
-                status=status.HTTP_404_NOT_FOUND
-            )
+    def get(self, request):
+        favorites = Favorite.objects.filter(
+            user=request.user
+        ).select_related(
+            "product",
+            "product__category"
+        ).prefetch_related(
+            "product__images"
+        )
 
         serializer = FavoriteSerializer(
-            favorite
+            favorites,
+            many=True
         )
 
-        return Response(
-            {
-                "success": True,
-                "message": "Favorite retrieved successfully.",
-                "data": serializer.data
-            },
-            status=status.HTTP_200_OK
-        )
+        return Response(serializer.data)
 
-    # POST
-    def post(self, request):
-
-        product_id = request.data.get("product")
-
-        if product_id is None:
-
-            return Response(
-                {
-                    "success": False,
-                    "message": "Product ID is required.",
-                    "data": None
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
+    def post(self, request, product_id):
         try:
-
-            product_id = int(product_id)
-
-        except (ValueError, TypeError):
-
-            return Response(
-                {
-                    "success": False,
-                    "message": "Product ID must be a valid number.",
-                    "data": None
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        try:
-
             product = Product.objects.get(
-                id=product_id
+                id=product_id,
+                is_active=True
             )
-
         except Product.DoesNotExist:
-
             return Response(
-                {
-                    "success": False,
-                    "message": "Product not found.",
-                    "data": None
-                },
+                {"detail": "Product not found."},
                 status=status.HTTP_404_NOT_FOUND
             )
 
-        if not product.is_active:
-
-            return Response(
-                {
-                    "success": False,
-                    "message": "This product is not active.",
-                    "data": None
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        favorite = Favorite.objects.filter(
+        favorite, created = Favorite.objects.get_or_create(
             user=request.user,
             product=product
-        ).first()
+        )
 
-        if favorite is not None:
-
+        if not created:
             return Response(
-                {
-                    "success": False,
-                    "message": "This product is already in your favorites.",
-                    "data": FavoriteSerializer(
-                        favorite
-                    ).data
-                },
+                {"detail": "Product is already in favorites."},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-        serializer = FavoriteSerializer(
-            data={
-                "product": product.id
-            }
-        )
-
-        if serializer.is_valid():
-
-            favorite = serializer.save(
-                user=request.user
-            )
-
-            return Response(
-                {
-                    "success": True,
-                    "message": "Product added to favorites successfully.",
-                    "data": FavoriteSerializer(
-                        favorite
-                    ).data
-                },
-                status=status.HTTP_201_CREATED
-            )
+        serializer = FavoriteSerializer(favorite)
 
         return Response(
-            {
-                "success": False,
-                "message": "Favorite could not be created.",
-                "errors": serializer.errors,
-                "data": None
-            },
-            status=status.HTTP_400_BAD_REQUEST
+            serializer.data,
+            status=status.HTTP_201_CREATED
         )
 
-    # PUT
-    def put(self, request, favorite_id=None):
-
-        if favorite_id is None:
-
-            return Response(
-                {
-                    "success": False,
-                    "message": "Favorite ID is required.",
-                    "data": None
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
+    def delete(self, request, product_id):
         try:
-
             favorite = Favorite.objects.get(
-                id=favorite_id,
-                user=request.user
+                user=request.user,
+                product_id=product_id
             )
-
         except Favorite.DoesNotExist:
-
             return Response(
-                {
-                    "success": False,
-                    "message": "Favorite not found.",
-                    "data": None
-                },
+                {"detail": "Favorite not found."},
                 status=status.HTTP_404_NOT_FOUND
             )
-
-        product_id = request.data.get("product")
-
-        if product_id is None:
-
-            return Response(
-                {
-                    "success": False,
-                    "message": "Product ID is required.",
-                    "data": None
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        try:
-
-            product_id = int(product_id)
-
-        except (ValueError, TypeError):
-
-            return Response(
-                {
-                    "success": False,
-                    "message": "Product ID must be a valid number.",
-                    "data": None
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        try:
-
-            product = Product.objects.get(
-                id=product_id
-            )
-
-        except Product.DoesNotExist:
-
-            return Response(
-                {
-                    "success": False,
-                    "message": "Product not found.",
-                    "data": None
-                },
-                status=status.HTTP_404_NOT_FOUND
-            )
-
-        if not product.is_active:
-
-            return Response(
-                {
-                    "success": False,
-                    "message": "This product is not active.",
-                    "data": None
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        another_favorite = Favorite.objects.filter(
-            user=request.user,
-            product=product
-        ).exclude(
-            id=favorite.id
-        ).first()
-
-        if another_favorite is not None:
-
-            return Response(
-                {
-                    "success": False,
-                    "message": "This product is already in your favorites.",
-                    "data": FavoriteSerializer(
-                        another_favorite
-                    ).data
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        serializer = FavoriteSerializer(
-            favorite,
-            data={
-                "product": product.id
-            }
-        )
-
-        if serializer.is_valid():
-
-            favorite = serializer.save()
-
-            return Response(
-                {
-                    "success": True,
-                    "message": "Favorite updated successfully.",
-                    "data": FavoriteSerializer(
-                        favorite
-                    ).data
-                },
-                status=status.HTTP_200_OK
-            )
-
-        return Response(
-            {
-                "success": False,
-                "message": "Favorite could not be updated.",
-                "errors": serializer.errors,
-                "data": None
-            },
-            status=status.HTTP_400_BAD_REQUEST
-        )
-
-    # DELETE
-    def delete(self, request, favorite_id=None):
-
-        if favorite_id is None:
-
-            return Response(
-                {
-                    "success": False,
-                    "message": "Favorite ID is required.",
-                    "data": None
-                },
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        try:
-
-            favorite = Favorite.objects.select_related(
-                "product"
-            ).get(
-                id=favorite_id,
-                user=request.user
-            )
-
-        except Favorite.DoesNotExist:
-
-            return Response(
-                {
-                    "success": False,
-                    "message": "Favorite not found.",
-                    "data": None
-                },
-                status=status.HTTP_404_NOT_FOUND
-            )
-
-        favorite_id = favorite.id
-        product_id = favorite.product.id
-        product_title = favorite.product.title
 
         favorite.delete()
 
         return Response(
-            {
-                "success": True,
-                "message": "Product removed from favorites successfully.",
-                "data": {
-                    "favorite_id": favorite_id,
-                    "product_id": product_id,
-                    "product_title": product_title
-                }
-            },
-            status=status.HTTP_200_OK
+            status=status.HTTP_204_NO_CONTENT
         )
 class CartView(APIView):
     permission_classes=[IsAuthenticated]
@@ -834,5 +527,138 @@ class CartView(APIView):
         except Product.DoesNotExist:
             return Response({
                 "message":"Not Product Active"
+            },status=status.HTTP_404_NOT_FOUND
+            )
+        if product.stock < quantity:
+            return Response(
+                {
+                    "message":"There is not enough product in stock."
+                },status=status.HTTP_400_BAD_REQUEST
+            )
+        cart,created=Cart.objects.get_or_create(user=request.user)
+        cart_item,created=CartItem.objects.get_or_create(cart=cart,product=product,defaults={"quantity":quantity})
+        if not created:
+            new_quantity=cart_item.quantity+quantity
+            if product.stock < new_quantity:
+                
+                return Response({
+                    "message":"There is not enough product in stock."
+                },status=status.HTTP_400_BAD_REQUEST
+                )
+            cart_item.quantity=new_quantity
+            cart_item.save()
+        serializer=CartItemSerializer(cart_item)
+        return Response({
+                "data":serializer.data,
+                "message":"Cart success created."
+            },status=status.HTTP_201_CREATED
+        )
+class CartDetailView(APIView):
+    permission_classes=[IsAuthenticated]
+    
+    def getCardItem(self,request,item_id):
+        
+        try:
+            return cart_item.objects.get(id=item_id,user=request.user)
+        except DoesNotExits:
+            return none
+    def patch(self,request,item_id):
+        cart_item=self.getCartItem(request,item_id)
+        if cart_item is none:
+            return Response({
+                "message:":"Not Found Cart Item"
+            },status=status.HTTP_404_NOT_FOUND
+        )
+        quantity=request.data.get("quantity")
+        if quantity is none:
+            return Response(
+                {
+                    "message:":"Not Found Quantity"
+                },status=status.HTTP_404_NOT_FOUND
+            )
+        try:
+            quantity=int(quantity)
+        except TypeError,ValueError:
+            return Response({
+                "message:":"Type Error"
             },status=status.HTTP_400_BAD_REQUEST
             )
+        if quantity <= 0:
+            return Response({
+                "message:":"quantity less than 0"
+            },status=status.HTTP_400_BAD_REQUEST
+            )
+        if cart_item.Product.stock < quantity:
+            return Response({
+                "message:":"There is not enough product in stock."
+            },status=status.HTTP_400_BAD_REQUEST) 
+        cart_item.quantity=quantity
+        cart_item.save()
+        serializer=CartItemSerializer(cart_item)
+        return Response({
+            "data:":serializer.data,
+            "message:":"Quantity success updated"
+        },status=status.HTTP_200_OK)
+        
+    def delete(self,request,item_id):
+        cart_item=self.getCartItem(request,item_id)
+        if cart_item is none:
+            return Response({
+                "message:":"Not found cart item."
+            },status=status.HTTP_404_NOT_FOUND) 
+        cart_item.delete()
+        return Response({
+                "message:":"Cart Item success deleted."
+            },status=status.HTTP_204_NO_CONTENT) 
+        
+class CartItemCreateView(APIView):
+    permission_classes=[IsAuthenticated]
+    def post(self,request):
+        product_id=request.data.get("product_id")
+        quantity=request.data.get("quantity",1)
+        if not product_id:
+            return Response({
+                "message:":"Not found Product ID"
+            },status=status.HTTP_400_BAD_REQUEST)
+        try:
+            quantity=int(quantity)
+        except (ValueError,TypeError):
+            return Response({
+                "message:":"Quantity must be number"
+                },status=status.HTTP_400_BAD_REQUEST)
+        try:
+            product=Product.objects.get(id=product_id,is_active=True) 
+        except Product.DoesNotExits:
+            return Response({
+                "message:":"Product not found"
+            },status=status.HTTP_404_NOT_FOUND)
+        if quantity <=0 :
+            return Response({
+                "message:":"Quantity less than 0"
+            },status=status.HTTP_400_BAD_REQUEST)
+        if product.stock < quantity:
+            return Response({
+                "message:":"Insufficient stock"
+            },status=status.HTTP_400_BAD_REQUEST)
+        cart,created=Cart.objects.get_or_create(user=request.user)
+        cart_item,created=CartItem.objects.get_or_create(cart=cart,product=product,defaults={"quantity":quantity})    
+        if not created:
+            new_quantity=CartItem.quantity+quantity
+            if new_quantity > product.stock:
+                return Response({
+                    "message:":"Not enough stock"
+                },status=status.HTTP_400_BAD_REQUEST)
+            cart_item.quantity=new_quantity
+            cart_item.save()
+        serializer=CartItemSerializer(cart_item)
+        return Response({
+            "data:":serializer.data,
+            "message:":"Success add product in cart"
+        },status=status.HTTP_201_CREATED)
+        
+        
+        
+            
+            
+        
+        

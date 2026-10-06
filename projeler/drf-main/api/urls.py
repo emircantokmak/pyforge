@@ -11,7 +11,11 @@ from .views import (
     ProductDetailView,
     UserProductView,
     UserProductDetailView,
-    FavoriteView,
+    FavoriteListView,
+    CartItemCreateView,
+    CartDetailView,
+    CartView
+    
 )
 
 
@@ -114,15 +118,30 @@ urlpatterns = [
 
     path(
         "favorites/",
-        FavoriteView.as_view(),
+        FavoriteListView.as_view(),
         name="favorite-list"
     ),
 
     path(
-    "favorites/<int:favorite_id>/",
-    FavoriteView.as_view(),
+    "favorites/<int:product_id>/",
+    FavoriteListView.as_view(),
     name="favorite-detail"
-)
+    ),
+    path(
+        "cart/",
+        CartView.as_view(),
+        name="cart"
+    ),
+    path(
+        "cart/items/<int:item_id>/",
+        CartDetailView.as_view(),
+        name="cart-item-detail"
+    ),
+    path(
+        "cart/items/",
+        CartItemCreateView.as_view(),
+        name="cart-item-create"
+    )
 
 
 ]

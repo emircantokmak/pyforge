@@ -239,12 +239,8 @@ class ProductSerializer(serializers.ModelSerializer):
 
 class FavoriteSerializer(serializers.ModelSerializer):
 
-    user = serializers.ReadOnlyField(
-        source="user.username"
-    )
 
-    product_detail = ProductSerializer(
-        source="product",
+    product = ProductSerializer(
         read_only=True
     )
 
@@ -253,16 +249,13 @@ class FavoriteSerializer(serializers.ModelSerializer):
 
         fields = [
             "id",
-            "user",
             "product",
-            "product_detail",
             "created_at"
         ]
 
         read_only_fields = [
             "id",
-            "user",
-            "product_detail",
+            "product",
             "created_at"
         ]
 
@@ -297,8 +290,8 @@ class CartItemSerializer(serializers.ModelSerializer):
             'updated_at'            
         ]
         
-        def getCalcTotalPrice(self,obj):
-            return obj.product.price * obj.quantity
+    def get_total_price(self, obj):
+        return obj.quantity * obj.product.price
         
 class CartSerializer(serializers.ModelSerializer):
     
@@ -323,7 +316,7 @@ class CartSerializer(serializers.ModelSerializer):
             'created_at',
             'updated_at'
         ]
-    def getTotalPrice(self,obj):
+    def get_total_price(self,obj):
         total=0
         for item in obj.items.all():
             total += item.product.price * item.quantity

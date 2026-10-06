@@ -79,50 +79,59 @@ class Favorite(models.Model):
     product = models.ForeignKey(
         "Product",
         on_delete=models.CASCADE,
-        related_name="favorites"
+        related_name="favorited_by"
     )
 
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ("user", "product")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user","product"],
+                name="unique_product_favorite"
+            )
+        ]
         ordering = ["-created_at"]
 
     def __str__(self):
-        return f"{self.user.username} - {self.product.title}"
+        return f"{self.product.title}"
     
+
 class Cart(models.Model):
-    users=models.OneToOneField(
+    # 'users' yerine standartlara uygun olarak 'user' yapıldı
+    user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
         related_name="cart"        
     )
-    created_at=models.DateTimeField(auto_now_add=True)
-    updated_at=models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return f"{self.user.username} - Card"
+        return f"{self.user.username} - Cart"
     
 class CartItem(models.Model):
-    card=models.ForeignKey(
+    cart = models.ForeignKey(
         Cart,
         on_delete=models.CASCADE,
         related_name="items"
     )
-    product=models.ForeignKey(
+    product = models.ForeignKey(
         Product,
         on_delete=models.CASCADE,
-        related_name="card_items"
+        related_name="cart_items"  
     )
-    quantity=models.PositiveIntegerField(default=1)
-    created_at=models.DateTimeField(auto_now_add=True)
-    updated_at=models.DateTimeField(auto_now=True)
+    quantity = models.PositiveIntegerField(default=1)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     
     class Meta:
-        constraints=[models.UniqueConstraint(
-            fields=["card","product"],
-            name="unique_card_product"
-        ) ]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["cart", "product"],  # cart olarak güncellendi
+                name="unique_cart_product"
+            ) 
+        ]
+        
     def __str__(self):
-        return f"{self.card.user.username} - {self.product.title} x {self.quantity}"
-    
+        return f"{self.cart.user.username} - {self.product.title} x {self.quantity}"
