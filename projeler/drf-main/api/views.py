@@ -4,7 +4,7 @@ from django.shortcuts import render
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated,IsAdminUser
 from rest_framework import status
 
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -14,8 +14,8 @@ from .models import Category, Product, ProductImage,Favorite,Cart,CartItem
 from .serializers import CategorySerializer, ProductSerializer,CartItemSerializer, ProductImageSerializer,FavoriteSerializer,CartSerializer
 from .filters import ProductFilter
 from rest_framework.pagination import PageNumberPagination
-
-
+from .permissions import IsProductOwner
+from api.supabase_storage import upload_product_image , delete_product_image
 # LOGIN / REGISTER PAGES
 
 
@@ -240,7 +240,10 @@ class ProfileView(APIView):
 
 class CategoryListView(APIView):
 
-    permission_classes = [AllowAny]
+    def get_permissions(self):
+        if self.request.method == "POST":
+            return [IsAdminUser()]
+        return [AllowAny()]
 
     def get(self, request):
 
@@ -252,6 +255,156 @@ class CategoryListView(APIView):
         )
 
         return Response(serializer.data)
+    
+    def post(self, request):
+        serializer = CategorySerializer(
+            data=request.data
+        )
+
+        if serializer.is_valid():
+
+            category = serializer.save()
+
+            return Response(
+                CategorySerializer(category).data,
+                status=status.HTTP_201_CREATED
+            )
+
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
+        
+class CategoryDetailView(APIView):
+
+    def get_permissions(self):
+        if self.request.method in ["PUT", "DELETE","PATCH"]:
+            return [IsAdminUser()]
+        return [AllowAny()]
+
+    def get_category(self, category_id):
+
+        try:
+            category = Category.objects.get(
+                id=category_id
+            )
+
+        except Category.DoesNotExist:
+
+            return Response(
+                {
+                    "detail": "Category not found."
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = CategorySerializer(category)
+
+        return Response(serializer.data)
+    def get(self, request, category_id):
+        
+        try:
+            category = Category.objects.get(
+                id=category_id
+            )
+
+        except Category.DoesNotExist:
+
+            return Response(
+                {
+                    "detail": "Category not found."
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = CategorySerializer(category)
+
+        return Response(serializer.data)
+    def put(self, request, category_id):
+        
+        try:
+            category = Category.objects.get(
+                id=category_id
+            )
+
+        except Category.DoesNotExist:
+
+            return Response(
+                {
+                    "detail": "Category not found."
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = CategorySerializer(
+            category,
+            data=request.data,
+            partial=True
+        )
+
+        if serializer.is_valid():
+
+            serializer.save()
+
+            return Response(serializer.data)
+
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    def patch(self, request, category_id):
+        try:
+            category = Category.objects.get(
+                id=category_id
+            )
+
+        except Category.DoesNotExist:
+
+            return Response(
+                {
+                    "detail": "Category not found."
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+        serializer = CategorySerializer(
+            category,
+            data=request.data,
+            partial=True
+        )
+
+        if serializer.is_valid():
+
+            serializer.save()
+
+            return Response(serializer.data)
+
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
+        
+    def delete(self, request, category_id):
+        try:
+            category = Category.objects.get(
+                id=category_id
+            )
+
+        except Category.DoesNotExist:
+
+            return Response(
+                {
+                    "detail": "Category not found."
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        category.delete()
+
+        return Response(
+            {"message":"Category delete Successfull"},
+            status=status.HTTP_204_NO_CONTENT
+        )
 
 
 class ProductListView(APIView):
@@ -308,6 +461,157 @@ class ProductDetailView(APIView):
 
         return Response(serializer.data)
 
+class ProductImageListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get_product(self, product_id, user):
+        try:
+            return Product.objects.get(
+                id=product_id,
+                user=user,
+            )
+        except Product.DoesNotExist:
+            return None
+
+    def get(self, request, product_id):
+        product = self.get_product(product_id, request.user)
+
+        if product is None:
+            return Response(
+                {"detail": "Product not found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        images = ProductImage.objects.filter(
+            product=product
+        ).order_by("-is_main", "created_at")
+
+        serializer = ProductImageSerializer(images, many=True)
+        return Response(serializer.data)
+
+    def post(self, request, product_id):
+        product = self.get_product(product_id, request.user)
+
+        if product is None:
+            return Response(
+                {"detail": "Product not found."},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        image_file = request.FILES.get("image")
+
+        if image_file is None:
+            return Response(
+                {"image": ["Bu alan zorunludur."]},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        is_main = request.data.get("is_main", "false")
+
+        if str(is_main).lower() not in ["true", "false", "1", "0"]:
+            return Response(
+                {"is_main": ["true veya false olmalıdır."]},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        is_main = str(is_main).lower() in ["true", "1"]
+
+        try:
+            image_url = upload_product_image(image_file)
+        except ValueError as exc:
+            return Response(
+                {"image": [str(exc)]},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        except Exception:
+            return Response(
+                {"detail": "Görsel yüklenemedi. Supabase ayarlarını kontrol edin."},
+                status=status.HTTP_502_BAD_GATEWAY,
+            )
+
+        if is_main:
+            ProductImage.objects.filter(
+                product=product
+            ).update(is_main=False)
+
+        image = ProductImage.objects.create(
+            product=product,
+            image=image_url,
+            is_main=is_main,
+        )
+
+        serializer = ProductImageSerializer(image)
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+        )
+class ProductImageDetailView(APIView):
+    permission_classes=[IsAuthenticated]
+    
+    def get_image(self,product_id,image_id,user):
+        try:
+            return Product.objects.get(product__id=product_id,id=image_id,product__user=user)
+        except Product.DoesNotExist:
+            return None
+        
+    def patch(self,request,product_id,image_id):
+        image=self.get_image(product_id,image_id,request.user)
+        if image is None:
+            return Response(
+                {
+                    "detail": "Image not found."
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+        serializer=ProductImageSerializer(image,data=request.data,partial=True)
+        if serializer.is_valid():
+            image=serializer.save()
+            return Response(
+                {
+                    "data":serializer.data,
+                    "message":"Image updated successfully."
+                },status=status.HTTP_200_OK
+            )
+        else:
+            return Response(
+                {
+                    "errors":serializer.errors,
+                    "message":"Image update failed."
+                },status=status.HTTP_400_BAD_REQUEST
+            )
+        
+    def delete(self,request,product_id,image_id):
+        image=self.get_image(product_id,image_id,request.user)
+        if image is None:
+            return Response(
+                {
+                    "detail": "Image not found."
+                },
+                status=status.HTTP_404_NOT_FOUND
+            )
+        try:
+            delete_product_image(image.image)
+        except ValueError as exc:
+            return Response(
+                {
+                    "image": str(exc)
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        except :
+            return Response(
+                {
+                    "message": "An error occurred while deleting the image."
+                },
+                status=status.HTTP_502_BAD_GATEWAY
+            )
+        image.delete()
+        return Response(
+            {
+                "message":"Image deleted successfully."
+            },status=status.HTTP_204_NO_CONTENT
+        )
+        
 
 class UserProductView(APIView):
 
@@ -351,7 +655,7 @@ class UserProductView(APIView):
 
 class UserProductDetailView(APIView):
 
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated],IsProductOwner
 
     def get_product(self, product_id, user):
 
@@ -379,7 +683,7 @@ class UserProductDetailView(APIView):
                 },
                 status=status.HTTP_404_NOT_FOUND
             )
-
+        self.check_object_permissions(request, product)
         serializer = ProductSerializer(
             product,
             data=request.data,
@@ -414,7 +718,7 @@ class UserProductDetailView(APIView):
                 },
                 status=status.HTTP_404_NOT_FOUND
             )
-
+        self.check_object_permissions(request, product)
         product.delete()
 
         return Response(
@@ -556,21 +860,21 @@ class CartView(APIView):
 class CartDetailView(APIView):
     permission_classes=[IsAuthenticated]
     
-    def getCardItem(self,request,item_id):
+    def getCartItem(self,request,item_id):
         
         try:
-            return cart_item.objects.get(id=item_id,user=request.user)
-        except DoesNotExits:
-            return none
+            return CartItem.objects.get(id=item_id, cart__user=request.user)
+        except CartItem.DoesNotExist:
+            return None
     def patch(self,request,item_id):
         cart_item=self.getCartItem(request,item_id)
-        if cart_item is none:
+        if cart_item is None:
             return Response({
                 "message:":"Not Found Cart Item"
             },status=status.HTTP_404_NOT_FOUND
         )
         quantity=request.data.get("quantity")
-        if quantity is none:
+        if quantity is None:
             return Response(
                 {
                     "message:":"Not Found Quantity"
@@ -588,7 +892,7 @@ class CartDetailView(APIView):
                 "message:":"quantity less than 0"
             },status=status.HTTP_400_BAD_REQUEST
             )
-        if cart_item.Product.stock < quantity:
+        if cart_item.product.stock < quantity:
             return Response({
                 "message:":"There is not enough product in stock."
             },status=status.HTTP_400_BAD_REQUEST) 
@@ -602,7 +906,7 @@ class CartDetailView(APIView):
         
     def delete(self,request,item_id):
         cart_item=self.getCartItem(request,item_id)
-        if cart_item is none:
+        if cart_item is None:
             return Response({
                 "message:":"Not found cart item."
             },status=status.HTTP_404_NOT_FOUND) 
@@ -628,7 +932,7 @@ class CartItemCreateView(APIView):
                 },status=status.HTTP_400_BAD_REQUEST)
         try:
             product=Product.objects.get(id=product_id,is_active=True) 
-        except Product.DoesNotExits:
+        except Product.DoesNotExist:
             return Response({
                 "message:":"Product not found"
             },status=status.HTTP_404_NOT_FOUND)
@@ -643,7 +947,7 @@ class CartItemCreateView(APIView):
         cart,created=Cart.objects.get_or_create(user=request.user)
         cart_item,created=CartItem.objects.get_or_create(cart=cart,product=product,defaults={"quantity":quantity})    
         if not created:
-            new_quantity=CartItem.quantity+quantity
+            new_quantity=cart_item.quantity+quantity
             if new_quantity > product.stock:
                 return Response({
                     "message:":"Not enough stock"

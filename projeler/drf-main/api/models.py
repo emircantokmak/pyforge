@@ -57,8 +57,8 @@ class ProductImage(models.Model):
         related_name="images"
     )
 
-    image = models.ImageField(
-        upload_to="products/"
+    image = models.URLField(
+        max_length=1000
     )
 
     is_main = models.BooleanField(default=False)

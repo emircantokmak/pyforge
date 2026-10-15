@@ -14,8 +14,10 @@ from .views import (
     FavoriteListView,
     CartItemCreateView,
     CartDetailView,
-    CartView
-    
+    CartView,
+    CategoryDetailView,
+    ProductImageListView,
+    ProductImageDetailView,    
 )
 
 
@@ -62,7 +64,6 @@ urlpatterns = [
         name="register-page"
     ),
 
-  
 
     path(
         "user/register/",
@@ -88,8 +89,23 @@ urlpatterns = [
         CategoryListView.as_view(),
         name="categories"
     ),
-
     
+    path(
+        "categories/<int:category_id>/",
+        CategoryDetailView.as_view(),
+        name="category-detail"
+    ),
+
+    path(
+        "user/products/<int:product_id>/images/",
+        ProductImageListView.as_view(),
+        name="user-product-images"
+    ),
+    path(
+        "products/<int:product_id>/images/<int:image_id>/",
+        ProductImageDetailView.as_view(),
+        name="product-detail-images"
+    ),
 
     path(
         "products/",
