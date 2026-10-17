@@ -1,0 +1,9 @@
+#################################################################
+#### Capitalize Beginner ve Elemantary Uygulama Listesi ###
+###############################################################
+
+# - Beginner Uygulama Listesi
+
+1- Login ve Karşılama Uygulaması
+2- Akıllı To Do Uygulaması
+3- Kargo Takip Uygulaması

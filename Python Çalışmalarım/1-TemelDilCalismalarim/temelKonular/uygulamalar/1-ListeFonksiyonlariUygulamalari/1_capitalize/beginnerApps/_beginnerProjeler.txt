@@ -1,0 +1,10 @@
+#####################################################
+### Capitalize Beginner Uygulamalar ###
+##############################################
+
+1- Login ve Karşılama Uygulaması
+2- Akıllı To Do Uygulaması
+3- Kargo Takip Uygulaması
+4- İsme Göre Kupon Oluşturma
+5- Günün Menüsü
+ 

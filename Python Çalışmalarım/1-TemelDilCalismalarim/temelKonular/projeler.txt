@@ -1,0 +1,43 @@
+################################################################
+--- Projeler İsimleri Konuları ve Konseptleri
+####################################################
+
+### - Karakter Dizileri İle İlgili Projer - ###
+##################################################
+--- 1-Capitalize Fonksiyonu Kullanılan Projeler ---
+#############################################
+##### --- Proje İsimleri ve Proje Açıklamaları --- #####
+##############################################################
+
+########################################################
+### --- Tamamlanma Durumu: --- BAŞLANMADI ####
+######################################################
+
+Pre-Intermediate (Orta Altı Seviye) — 7 Yaratıcı Repo
+
+• Repolarize (repolarize-api-cleaner): API'den gelen bozuk kullanıcı adlarını list comprehension kullanarak tek satırda optimize eden temizlik aracı.
+• ScrapingSheen (scrapingsheen-company-filter): Web sitelerinden kazınan boşluklu ve kirli şirket verilerini kurumsal formata sokan bot.
+• ChromaFlow (chromaflow-map-transformer): Harita uygulamalarındaki renk etiketlerini map() fonksiyonu ile döngüsüz dönüştüren yüksek performanslı motor.
+• SentinelType (sentineltype-sql-shield): Karışık tipli form girdilerinde SQL enjeksiyon riskine karşı sadece metinleri filtreleyip standardize eden güvenlik katmanı.
+• StreamSplit (streamsplit-csv-parser): CSV'den gelen virgüllü ham lokasyon şeritlerini ayrıştırıp temiz bir listeye dizen dosya okuyucu.
+• LogVanguard (logvanguard-parser-system): Canlı sunucu loglarını hata seviyesi ve capitalize edilmiş açıklama cümlesi olarak ikiye bölen log analizcisi.
+• SanitizeShield (sanitizeshield-file-bot): Yüklenen dosya isimlerindeki illegal karakterleri (!, ?) budayıp diske güvenle yazan otomasyon.
+
+🔵 Intermediate (Orta Seviye) — 5 Yaratıcı Repo
+
+• MatrixMatrix (matrixmatrix-team-shaper): Matris yapısındaki iç içe geçmiş departman/ekip listelerini hiyerarşiyi bozmadan toplu güncelleyen sistem.
+• QueryForge (queryforge-dynamic-sql): Gelen filtreleri temizleyerek güvenli SQL IN (...) sorguları üreten backend modülü.
+• JsonPulse (jsonpulse-response-pipeline): Üçüncü parti kontrolsüz JSON yanıtlarının derinliklerindeki listeleri bulup kurumsal standarta çeken köprü yazılımı.
+• FormVigil (formvigil-validation-engine): Boşluk ve tip denetimi yaparak form girdilerini backend seviyesinde doğrulayan kütüphane.
+• CellShaper (cellshaper-dataframe-sim): Pandas olmadan ham listeler üzerinden satır/sütun bazlı tablo hücresi düzenleme simülasyonu.
+
+🔴 Upper-Intermediate (İleri Düzey Altı Seviye) — 3 Yaratıcı Repo
+
+• MethodChain (methodchain-text-pipeline): Veriyi belirli temizlik aşamalarından sırayla geçiren OOP tabanlı Method Chaining (Zincirleme) veri hattı.
+• LambdaStream (lambdastream-conditional-pipe): Belirli uzunluk kriterini sağlayan verileri anonim fonksiyonlarla (lambda) anlık işleyen filtre boru hattı.
+• ChunkFlow (chunkflow-generator-stream): Milyonlarca satırlık dev listeleri RAM'i şişirmeden paketler (chunk) halinde işleyen hafıza dostu generator mimarisi.
+
+🔥 Advanced (İleri Düzey Seviye) — 1 Yaratıcı Repo
+
+• MetaORM (metaorm-schema-validator): Python Custom Descriptors (Özel Betimleyiciler) ve Meta-Programming kullanarak, modellere atanan her string veriyi runtime'da otomatik yakalayan, temizleyen ve veritabanı güvenliği sağlayan üst düzey ORM mimari bileşeni.
+
